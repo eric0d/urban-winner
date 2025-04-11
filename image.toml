@@ -1,3 +1,34 @@
-[[customizations.filesystem]]
-mountpoint = "/"
-minsize = "20 GiB"
+name = "maga os "
+description = "Vanilla GNOME uBlue image with native Steam, Flathub, ZSH-only shell, latest kernel & Mesa"
+base_image = "ghcr.io/ublue-os/silverblue-main"
+
+modules = [
+  "bling/gnome-vanilla",      # Upstream GNOME look
+  "bling/kernel-mainline",    # Latest Linux kernel
+  "bling/mesa-git",           # Latest Mesa for better graphics
+  "bling/flathub"             # Enables Flathub for Flatpak apps
+]
+
+[rpm]
+install = [
+  "steam",                    # Native RPM version of Steam
+  "zsh",                      # ZSH shell
+  "util-linux-user"          # For `chsh` command (so we can change shell)
+]
+
+# Optional: GUI apps via Flatpak
+[flatpak]
+apps = [
+  "com.github.tchx84.Flatseal",  # Flatpak permissions manager
+  "org.gimp.GIMP"                # Example Flatpak app
+]
+
+[gnome_extensions]
+install = []
+
+# Optional: Change the default shell to ZSH system-wide
+[post]
+# This sets ZSH as default for new users
+script = '''
+sed -i 's|/bin/bash|/bin/zsh|g' /etc/default/useradd
+'''
